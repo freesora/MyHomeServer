@@ -1,0 +1,2 @@
+include ':MyHomeHeatController'
+project(":MyHomeHeatController").projectDir = file("../MyHomeHeatController")
