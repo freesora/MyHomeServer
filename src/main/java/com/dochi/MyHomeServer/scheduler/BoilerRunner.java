@@ -35,6 +35,12 @@ public class BoilerRunner {
 	public BoilerRunner() {
 	}
 	
+	public boolean runCheck()
+	{
+		if(timer == null)
+			return false;
+		return true;
+	}
 	public void init()
 	{
 		isRunning = false;
@@ -123,16 +129,17 @@ public class BoilerRunner {
 					}
 				}
 				// 0 -> maybe bathroom?
-				// 1 -> °Å½Ç
-				// 2 -> ¾È¹æ
-				// 3 -> Å«¹æ
-				// 4 -> ÀÛÀº¹æ
+				// 1 -> ï¿½Å½ï¿½
+				// 2 -> ï¿½È¹ï¿½
+				// 3 -> Å«ï¿½ï¿½
+				// 4 -> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			}
 			// Run the task
 			isRunning = true;
 			int runningMinTmp = Integer.parseInt(prop.getRunningMin());
 			
-			timer.cancel();
+			if(timer != null)
+				timer.cancel();
 			timer = new Timer();
 			timer.schedule(new BoilerStopTask(), Math.round(runningMinTmp * 1000 * 60));
 			timer.schedule(new BoilerFlagChangeTask(), Math.round(runningMinTmp * 1000 * 60) * 2);
@@ -151,6 +158,7 @@ public class BoilerRunner {
 			PropertyReader prop = new PropertyReader(pathService.getConfigPath());
 			setTempWithoutMin(prop.getMinTemp());
 			timer.cancel();
+			timer = null;
 		}
 	}
 	

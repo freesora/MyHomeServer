@@ -39,7 +39,15 @@ public class TempController extends TimerTask {
 	PathStorageService pathService;;
 	
 	
+	
 	private Timer timer;
+	
+	public boolean runCheck()
+	{
+		if(timer == null)
+			return false;
+		return true;
+	}
 	public void init()
 	{
 		
@@ -66,6 +74,7 @@ public class TempController extends TimerTask {
 			timer.cancel();
 		if(boilerRunner != null)
 			boilerRunner.cancle();
+		timer = null;
 	}
 	
 

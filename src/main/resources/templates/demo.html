@@ -2,9 +2,53 @@
 <html>
 <head>
 
+
 <title>Hello World</title>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/css/themes/MyHome.css" />
+<link rel="stylesheet" href="/css/themes/jquery.mobile.icons.min.css" />
+<link rel="stylesheet"
+	href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script
+	src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+	$(function() {
+		$.ajax({
+			contentType : 'application/json',
+			dataType : 'json',
+			url : '/getInfo',
+			type : 'POST',
+			success : function(response) {
+				
+				$("#runningMin").html("보일러 작동 시간 : " + response.runningMin);
+			},
+			error : function(request, status, error) {
+				alert(response.message);
+			}
+		});
+
+	});
+</script>
 </head>
 <body>
-	<h1> Eom SoYoung Merong</h1>
+	<h1>Current Status</h1>
+
+	<div id="status"></div>
+	<form>
+		    <label for="flip-checkbox-1">현재 보일러 동작 상태</label>
+		    <input type="checkbox" data-role="flipswitch" name="flip-checkbox-1" id="flip-checkbox-1"/>
+		
+	</form>
+	<label for="radio-choice-b1">Off</label>
+
+	<div id="runningMin"></div>
+	<div id="watchingMin"></div>
+	<div id="targetTemp"></div>
+	<div id="targetTemp"></div>
 </body>
 </html>
