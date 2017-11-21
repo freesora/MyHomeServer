@@ -122,7 +122,7 @@ public class PropertyReader {
 			
 			//String configPath = env.getProperty("config_path");
 			input = new FileInputStream(configPath);
-			logger.info("Input Path : " + input);
+			logger.info("Input Path : " + configPath);
 			Properties prop = new Properties();
 			prop.load(input);
 			requestURL = prop.getProperty("requestURL");

@@ -43,13 +43,15 @@ public class BoilerRunner {
 	}
 	public void init()
 	{
+		PropertyReader prop = new PropertyReader(pathService.getConfigPath());
+		setTempWithoutMin(prop.getMinTemp());
 		isRunning = false;
 		if(timer != null)
 		{
 			timer.cancel();
+			timer.purge();
 			timer = null;
 		}
-		timer = new Timer();
 	}
 
 	public void setTempWithoutMin(String temp) {
@@ -153,10 +155,11 @@ public class BoilerRunner {
 	
 	void cancle()
 	{
+		PropertyReader prop = new PropertyReader(pathService.getConfigPath());
+		setTempWithoutMin(prop.getMinTemp());
 		if(timer != null)
 		{
-			PropertyReader prop = new PropertyReader(pathService.getConfigPath());
-			setTempWithoutMin(prop.getMinTemp());
+			isRunning=false;
 			timer.cancel();
 			timer = null;
 		}

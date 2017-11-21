@@ -24,8 +24,11 @@
 			url : '/getInfo',
 			type : 'POST',
 			success : function(response) {
-				
-				$("#runningMin").html("보일러 작동 시간 : " + response.runningMin);
+				if (response.working == true)
+					$("#switch").html("On");
+				else
+					$("#switch").html("Off");
+				//$("#runningMin").html("보일러 작동 시간 : " + response.runningMin);
 			},
 			error : function(request, status, error) {
 				alert(response.message);
@@ -33,19 +36,67 @@
 		});
 
 	});
+
+	$(function() {
+		$('#switch').on('click', function() {
+			var value = $("#switch").text();
+			$.ajax({
+				data : {
+					"val" : value
+				},
+				url : '/switchHeater',
+				type : 'get',
+				success : function(response) {
+					if (response.result == true) {
+						if (value == "On")
+							$("#switch").html("Off");
+						else
+							$("#switch").html("On");
+					} else
+						alert("Not Work! : " + response.result);
+
+					//$("#runningMin").html("보일러 작동 시간 : " + response.runningMin);
+				},
+				error : function(request, status, error) {
+					alert(response.message);
+				}
+			});
+		});
+
+	});
+
+	function switchHeater() {
+		var value = $("#switch").text();
+		$.ajax({
+			data : {
+				"val" : value
+			},
+			url : '/switchHeater',
+			type : 'get',
+			success : function(response) {
+				if (response.result == true) {
+					if (value == "On")
+						$("#switch").html("Off");
+					else
+						$("#switch").html("On");
+				} else
+					alert("Not Work! : " + response.result);
+
+				//$("#runningMin").html("보일러 작동 시간 : " + response.runningMin);
+			},
+			error : function(request, status, error) {
+				alert(response.message);
+			}
+		});
+	}
 </script>
 </head>
 <body>
-	<h1>Current Status</h1>
 
-	<div id="status"></div>
-	<form>
-		    <label for="flip-checkbox-1">현재 보일러 동작 상태</label>
-		    <input type="checkbox" data-role="flipswitch" name="flip-checkbox-1" id="flip-checkbox-1"/>
-		
-	</form>
-	<label for="radio-choice-b1">Off</label>
-
+	<div id="status" style="width:70%; margin: auto;">
+		<h1 style="align:center;">현재 보일러 작동 현황</h1>
+		<button id="switch" class="ui-btn">On/Off</button>
+	</div>
 	<div id="runningMin"></div>
 	<div id="watchingMin"></div>
 	<div id="targetTemp"></div>
