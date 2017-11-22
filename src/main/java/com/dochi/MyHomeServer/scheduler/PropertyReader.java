@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -21,7 +22,8 @@ public class PropertyReader {
 
 	Logger logger = Logger.getLogger(PropertyReader.class);
 	
-	
+	@Value("${config_path}")
+	private String configPath;
 
 	private String requestURL;
 	private String responseURL;
@@ -113,6 +115,34 @@ public class PropertyReader {
 
 	public void setWatchingMin(String watchingMin) {
 		this.watchingMin = watchingMin;
+	}
+	
+	public PropertyReader()
+	{
+		InputStream input;
+		try {
+			
+			//String configPath = env.getProperty("config_path");
+			input = new FileInputStream(configPath);
+			logger.info("Input Path : " + configPath);
+			Properties prop = new Properties();
+			prop.load(input);
+			requestURL = prop.getProperty("requestURL");
+			responseURL = prop.getProperty("responseURL");
+			hh_dong = prop.getProperty("hh_dong");
+			hkey = prop.getProperty("hkey");
+			hh_ho = prop.getProperty("hh_ho");
+			wannaTemp = prop.getProperty("wannaTemp");
+			runningMin = prop.getProperty("runningMin");
+			minTemp = prop.getProperty("minTemp");
+			highTemp = prop.getProperty("highTemp");
+			watchingMin = prop.getProperty("watchingMin");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("Reading Property Error");
+			logger.error(e.getMessage());
+			//e.printStackTrace();
+		}
 	}
 
 	public PropertyReader(String configPath)

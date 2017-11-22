@@ -15,13 +15,13 @@ import javax.xml.xpath.XPathFactory;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.dochi.MyHomeServer.EntityManager;
-import com.dochi.MyHomeServer.PathStorageService;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.async.Callback;
@@ -34,8 +34,8 @@ public class TempController {
 	@Autowired
 	private BoilerRunner boilerRunner;
 
-	@Autowired
-	PathStorageService pathService;;
+	@Value("${config_path}")
+	private String configPath;
 
 	private Timer timer;
 
@@ -64,7 +64,7 @@ public class TempController {
 	public boolean startTimer() {
 		try {
 			init();
-			PropertyReader prop = new PropertyReader(pathService.getConfigPath());
+			PropertyReader prop = new PropertyReader(configPath);
 			int duration = Integer.parseInt(prop.getWatchingMin());
 			timer = new Timer();
 			timer.scheduleAtFixedRate(new TempWatcher(), 0, duration * 1000 * 60);
@@ -86,7 +86,7 @@ public class TempController {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			PropertyReader prop = new PropertyReader(pathService.getConfigPath());
+			PropertyReader prop = new PropertyReader(configPath);
 			if (BoilerRunner.isRunning != true) {
 				try {
 					// Number 1 : wanna focus

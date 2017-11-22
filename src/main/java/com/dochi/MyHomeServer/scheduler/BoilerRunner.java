@@ -8,10 +8,10 @@ import java.util.TimerTask;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.dochi.MyHomeServer.EntityManager;
-import com.dochi.MyHomeServer.PathStorageService;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.request.HttpRequest;
@@ -19,6 +19,10 @@ import com.mashape.unirest.request.HttpRequestWithBody;
 
 @Service
 public class BoilerRunner {
+	
+	@Value("${config_path}")
+	private String configPath;
+	
 	public static boolean isRunning;
 	final static Logger logger = Logger.getLogger(BoilerRunner.class);
 
@@ -29,9 +33,6 @@ public class BoilerRunner {
 	// private String m_hh_ho;
 	// private String m_requestURL;
 	
-	@Autowired 
-	PathStorageService pathService;;
-
 	public BoilerRunner() {
 	}
 	
@@ -43,7 +44,7 @@ public class BoilerRunner {
 	}
 	public void init()
 	{
-		PropertyReader prop = new PropertyReader(pathService.getConfigPath());
+		PropertyReader prop = new PropertyReader(configPath);
 		setTempWithoutMin(prop.getMinTemp());
 		isRunning = false;
 		if(timer != null)
@@ -56,7 +57,7 @@ public class BoilerRunner {
 
 	public void setTempWithoutMin(String temp) {
 
-		PropertyReader prop = new PropertyReader(pathService.getConfigPath());
+		PropertyReader prop = new PropertyReader(configPath);
 		logger.info("Called settempWithoutMin Method -> Hoping Temp : " + temp);
 		try {
 			HttpRequestWithBody httpRequest = Unirest.post(prop.getRequestURL());
@@ -101,7 +102,7 @@ public class BoilerRunner {
 
 		//logger.info("Called settempWithoutMin Method -> Hoping Temp : " + temp);
 		try {
-			PropertyReader prop = new PropertyReader(pathService.getConfigPath());
+			PropertyReader prop = new PropertyReader(configPath);
 			HttpRequestWithBody httpRequest = Unirest.post(prop.getRequestURL());
 			for (int i = 1; i < 7; i++) {
 				if (i == 5)
@@ -155,7 +156,7 @@ public class BoilerRunner {
 	
 	void cancle()
 	{
-		PropertyReader prop = new PropertyReader(pathService.getConfigPath());
+		PropertyReader prop = new PropertyReader(configPath);
 		setTempWithoutMin(prop.getMinTemp());
 		if(timer != null)
 		{
@@ -181,7 +182,7 @@ public class BoilerRunner {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			PropertyReader prop = new PropertyReader(pathService.getConfigPath());
+			PropertyReader prop = new PropertyReader(configPath);
 
 			logger.info("in " + Integer.parseInt(prop.getRunningMin()) + "minutes");
 			logger.info("Temporature will be changed");

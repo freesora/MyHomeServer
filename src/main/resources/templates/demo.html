@@ -28,7 +28,56 @@
 					$("#switch").html("On");
 				else
 					$("#switch").html("Off");
+
+				// For running Time
+
+				var runningMin = response.runningMin;
+				$("#runningMinId option").each(function() {
+					if( $(this).html() == runningMin)
+						$(this).prop('selected',true);
+						$("runningMinId").text(runningMin);
+				});
+
+				
+
+
+
 				//$("#runningMin").html("보일러 작동 시간 : " + response.runningMin);
+			},
+			error : function(request, status, error) {
+				alert(response.message);
+			}
+		});
+
+		$.ajax({
+			contentType : 'application/json',
+			dataType : 'json',
+			url : '/getCurrTempInfo',
+			type : 'GET',
+			success : function(response) {
+				var list = response
+
+				$("#roomTempTable").append("<tr>");
+				$("#roomTempTable").append("<th> 현재 온도 </th>");
+				$.each(list, function(i) {
+					console.log(list[i]);
+
+					$("#roomTempTable").append(
+							"<td>" + list[i].currTmp + "</td>");
+				});
+				$("#roomTempTable").append("</tr>");
+
+				$("#roomTempTable").append("<tr>");
+				$("#roomTempTable").append("<th> 설정 온도 </th>");
+				$.each(list, function(i) {
+					console.log(list[i]);
+
+					$("#roomTempTable").append(
+							"<td>" + list[i].setTemp + "</td>");
+
+				});
+				$("#roomTempTable").append("</tr>");
+
 			},
 			error : function(request, status, error) {
 				alert(response.message);
@@ -93,13 +142,103 @@
 </head>
 <body>
 
-	<div id="status" style="width:70%; margin: auto;">
-		<h1 style="align:center;">현재 보일러 작동 현황</h1>
-		<button id="switch" class="ui-btn">On/Off</button>
+	<div id="status" style="width: 70%; margin: auto;">
+		<h1 style="text-align: center;">도치네 보일러 현황</h1>
+		<div style="width: 30%; margin: auto;">
+			<button id="switch" class="ui-btn"></button>
+		</div>
+
+
+		<br /> <br />
+
+		<table data-role="table" id="table-column-toggle"
+			class="ui-responsive table-stroke">
+			<thead>
+				<tr style="margin: 0 auto;">
+					<th>구분</th>
+					<th>거실</th>
+					<th>안방</th>
+					<th>서재방</th>
+					<th>작은방</th>
+					<th>화장실</th>
+				</tr>
+			</thead>
+			<tbody id="roomTempTable">
+
+			</tbody>
+		</table>
+
+
+		<br /> <br />
+
+		<div id="settingDiv" style="width: 50%; margin: auto;">
+
+			<ul data-role="listview">
+				<li> <label for="select-native-1">보일러 1회 동작 시간</label>     <select
+					name="select-native-1" id="runningMinId">         
+						<option value="1">10</option>         
+						<option value="2">20</option>         
+						<option value="3">30</option>         
+						<option value="4">40</option>         
+						<option value="5">50</option>         
+						<option value="6">60</option>         
+						<option value="7">70</option>         
+						<option value="8">80</option>         
+				</select></li>     
+
+				<li><label for="select-native-2">체크 간격</label>     <select
+					name="select-native-2" id="intervalId">         
+						<option value="1">10</option>         
+						<option value="2">20</option>         
+						<option value="3">30</option>         
+				</select></li>
+
+				<li><label for="select-native-3">희망 온도</label>     <select
+					name="select-native-3" id="wannaTempId">         
+						<option value="1">20.0</option>         
+						<option value="2">21.0</option>         
+						<option value="3">22.0</option>         
+						<option value="4">23.0</option>         
+						<option value="5">24.0</option>         
+						<option value="6">25.0</option>         
+						<option value="7">26.0</option>         
+				</select></li>
+
+				<li><label for="select-native-4">최고 온도</label>     <select
+					name="select-native-4" id="highTempId">         
+						<option value="1">20.0</option>         
+						<option value="2">21.0</option>         
+						<option value="3">22.0</option>         
+						<option value="4">23.0</option>         
+						<option value="5">24.0</option>         
+						<option value="6">25.0</option>         
+						<option value="7">26.0</option>         
+				</select></li>
+
+
+
+				<li><label for="select-native-5">최저 온도</label>     <select
+					name="select-native-5" id="lowTempId">         
+						<option value="1">11.0</option>         
+						<option value="2">12.0</option>         
+						<option value="3">13.0</option>         
+						<option value="4">14.0</option>         
+						<option value="5">15.0</option>         
+				</select></li>
+
+
+
+
+			</ul>
+		</div>
+
+
 	</div>
+
+
 	<div id="runningMin"></div>
 	<div id="watchingMin"></div>
 	<div id="targetTemp"></div>
-	<div id="targetTemp"></div>
+
 </body>
 </html>
