@@ -35,7 +35,32 @@
 				$("#runningMinId option").each(function() {
 					if( $(this).html() == runningMin)
 						$(this).prop('selected',true);
-						$("runningMinId").text(runningMin);
+						
+				});
+				
+				
+				var watchingMin = response.watchingMin;
+				$("#intervalId option").each(function() {
+					if( $(this).html() == watchingMin)
+						$(this).prop('selected',true);
+				});
+				
+				var wannaTemp = response.targetTemp;
+				$("#wannaTempId option").each(function() {
+					if( $(this).html() == wannaTemp)
+						$(this).prop('selected',true);
+				});
+				
+				var highTemp = response.setTemp;
+				$("#highTempId option").each(function() {
+					if( $(this).html() == highTemp)
+						$(this).prop('selected',true);
+				});
+				
+				var minTemp = response.minTemp;
+				$("#lowTempId option").each(function() {
+					if( $(this).html() == minTemp)
+						$(this).prop('selected',true);
 				});
 
 				
@@ -111,7 +136,41 @@
 				}
 			});
 		});
-
+		
+		// for apply switch button
+		$('#applySwitch').on('click',function(){
+			var property = new Object();
+			
+			var runningMin = $("#runningMinId option:selected").text();
+			var intervalMin = $("#intervalId option:selected").text();
+			var wannaTemp = $("#wannaTempId option:selected").text();
+			var highTemp = $("#highTempId option:selected").text();
+			var lowTemp = $("#lowTempId option:selected").text();
+			
+			property.runningMin = runningMin;
+			property.intervalMin = intervalMin;
+			property.wannaTemp = wannaTemp;
+			property.highTemp = highTemp;
+			property.lowTemp = lowTemp;
+			
+			$.ajax({
+				data : JSON.stringify(property),
+				url : '/applyConfig',
+				contentType : 'application/json',
+				dataType : 'json',
+				type : 'POST',
+				success : function(response) {
+					if (response.result == true) {
+						alert("Success!");
+					} else
+						alert("Not Work!");
+				},
+				error : function(request, status, error) {
+					alert(response.message);
+				}
+			});
+		})
+		
 	});
 
 	function switchHeater() {
@@ -142,8 +201,11 @@
 </head>
 <body>
 
-	<div id="status" style="width: 70%; margin: auto;">
-		<h1 style="text-align: center;">도치네 보일러 현황</h1>
+	<div id="status">
+		<h1 style="text-align: center;">도치네 보일러 현황 </h1>
+		<h4 style="text-align: center;"> <a href="log" target="_blank"> Show logs..</a> </h4>
+		
+		<br/>
 		<div style="width: 30%; margin: auto;">
 			<button id="switch" class="ui-btn"></button>
 		</div>
@@ -171,7 +233,7 @@
 
 		<br /> <br />
 
-		<div id="settingDiv" style="width: 50%; margin: auto;">
+		<div id="settingDiv">
 
 			<ul data-role="listview">
 				<li> <label for="select-native-1">보일러 1회 동작 시간</label>     <select
@@ -230,10 +292,16 @@
 
 
 			</ul>
+
+			<div style="width: 30%; margin: auto;">
+				<br />
+				<button id="applySwitch" class="ui-btn">Apply</button>
+			</div>
 		</div>
 
-
 	</div>
+
+
 
 
 	<div id="runningMin"></div>

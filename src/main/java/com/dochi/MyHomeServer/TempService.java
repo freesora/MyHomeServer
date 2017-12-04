@@ -28,6 +28,8 @@ public class TempService {
 
 	@Value("${config_path}")
 	private String configPath;
+	
+	
 
 	public ArrayList<TempInfo> getTemperature() {
 

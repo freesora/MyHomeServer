@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<title>Hello World</title>
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/css/themes/MyHome.css" />
+<link rel="stylesheet" href="/css/themes/jquery.mobile.icons.min.css" />
+<link rel="stylesheet"
+	href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script
+	src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+	$(function() {
+
+		$.ajax({
+			contentType : 'application/json',
+			dataType : 'json',
+			url : '/getLogFiles',
+			type : 'GET',
+			success : function(response) {
+				var list = response
+
+				$.each(list, function(i) {
+				$("#logFileTable").append("<tr>");
+				
+
+					$("#logFileTable").append("<td>" + list[i] + "</td>");
+				
+				$("#logFileTable").append("</tr>");
+				});
+			},
+			error : function(request, status, error) {
+				alert(response.message);
+			}
+		});
+
+	});
+</script>
+</head>
+<body>
+
+	<div id="status">
+		<h1 style="text-align: center;">Log File List...</h1>
+
+		<br />
+
+		<div style="margin:auto;">		
+		<table data-role="table" id="table-column-toggle"
+			class="ui-responsive table-stroke">
+			<thead>
+				<tr style="margin: 0 auto;">
+					<th>Log Date</th>
+				</tr>
+			</thead>
+			<tbody id="logFileTable">
+
+			</tbody>
+		</table>
+		</div>
+	</div>
+</body>
+</html>

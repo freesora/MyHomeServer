@@ -57,6 +57,7 @@ public class BoilerRunner {
 
 	public void setTempWithoutMin(String temp) {
 
+		logger.info("OFF Heater.. Setting to low Temporature!");
 		PropertyReader prop = new PropertyReader(configPath);
 		logger.info("Called settempWithoutMin Method -> Hoping Temp : " + temp);
 		try {
@@ -101,6 +102,7 @@ public class BoilerRunner {
 		//logger.info("Called runBoiler Method -> Hoping Temp : " + temp);
 
 		//logger.info("Called settempWithoutMin Method -> Hoping Temp : " + temp);
+		logger.info("ON Heater.. Setting to High Temporature!");
 		try {
 			PropertyReader prop = new PropertyReader(configPath);
 			HttpRequestWithBody httpRequest = Unirest.post(prop.getRequestURL());

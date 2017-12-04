@@ -1,27 +1,19 @@
 package com.dochi.MyHomeServer.scheduler;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Service;
 
-import com.dochi.MyHomeServer.EntityManager;
-import com.dochi.MyHomeServer.MyHomeController;
-
+import com.dochi.MyHomeServer.Domain.ConfigProperty;
 
 public class PropertyReader {
 
 	Logger logger = Logger.getLogger(PropertyReader.class);
-	
+
 	@Value("${config_path}")
 	private String configPath;
 
@@ -29,6 +21,7 @@ public class PropertyReader {
 	private String responseURL;
 	private String hkey;
 	private String highTemp;
+
 	public String getRequestURL() {
 		return requestURL;
 	}
@@ -99,16 +92,16 @@ public class PropertyReader {
 	private String runningMin;
 	private String minTemp;
 	private String watchingMin;
-	
-//	responseURL=http://m.ezville.net/ezvillehn/mobile/service/temSetSearchCall.php
-//		requestURL=http://m.ezville.net/ezvillehn/mobile/service/temSetControlCall.php
-//		hkey=0008911
-//		hh_dong=101
-//		hh_ho=705
-//		wannaTemp=22.0
-//		runningMin=30
-//		minTemp=11.0
-	
+
+	// responseURL=http://m.ezville.net/ezvillehn/mobile/service/temSetSearchCall.php
+	// requestURL=http://m.ezville.net/ezvillehn/mobile/service/temSetControlCall.php
+	// hkey=0008911
+	// hh_dong=101
+	// hh_ho=705
+	// wannaTemp=22.0
+	// runningMin=30
+	// minTemp=11.0
+
 	public String getWatchingMin() {
 		return watchingMin;
 	}
@@ -116,13 +109,30 @@ public class PropertyReader {
 	public void setWatchingMin(String watchingMin) {
 		this.watchingMin = watchingMin;
 	}
-	
-	public PropertyReader()
-	{
+
+	public boolean saveConfigProperty(String configPath, ConfigProperty configProperty) {
+		try {
+			logger.info(configProperty.toString());
+			Properties prop = new Properties();
+			prop.load(new FileInputStream(configPath));
+			prop.setProperty("wannaTemp", configProperty.getWannaTemp());
+			prop.setProperty("runningMin", configProperty.getRunningMin());
+			prop.setProperty("minTemp", configProperty.getLowTemp());
+			prop.setProperty("highTemp", configProperty.getHighTemp());
+			prop.setProperty("watchingMin",configProperty.getIntervalMin());
+			prop.store(new FileOutputStream(configPath), "MY Heating Server Setting Properties");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public PropertyReader() {
 		InputStream input;
 		try {
-			
-			//String configPath = env.getProperty("config_path");
+
+			// String configPath = env.getProperty("config_path");
 			input = new FileInputStream(configPath);
 			logger.info("Input Path : " + configPath);
 			Properties prop = new Properties();
@@ -141,18 +151,17 @@ public class PropertyReader {
 			// TODO Auto-generated catch block
 			logger.error("Reading Property Error");
 			logger.error(e.getMessage());
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 
-	public PropertyReader(String configPath)
-	{
+	public PropertyReader(String configPath) {
 		InputStream input;
 		try {
-			
-			//String configPath = env.getProperty("config_path");
+
+			// String configPath = env.getProperty("config_path");
 			input = new FileInputStream(configPath);
-			logger.info("Input Path : " + configPath);
+			//logger.info("Input Path : " + configPath);
 			Properties prop = new Properties();
 			prop.load(input);
 			requestURL = prop.getProperty("requestURL");
@@ -169,10 +178,10 @@ public class PropertyReader {
 			// TODO Auto-generated catch block
 			logger.error("Reading Property Error");
 			logger.error(e.getMessage());
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
-	
+
 	public String getHighTemp() {
 		return highTemp;
 	}
