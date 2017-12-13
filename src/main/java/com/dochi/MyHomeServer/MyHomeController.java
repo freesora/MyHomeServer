@@ -39,6 +39,9 @@ public class MyHomeController {
 
 	@Autowired
 	TempService tempService;
+	
+	@Autowired
+	ReadingLogService readingLogService;
 
 	@Value("${config_path}")
 	private String configPath;
@@ -85,21 +88,39 @@ public class MyHomeController {
 		if (logFile.isDirectory()) {
 			Collection<File> fileList = FileUtils.listFiles(logFile, new String[] { "log" }, true);
 			for (File tmpFile : fileList) {
-				logFileList.add(FilenameUtils.getBaseName(tmpFile.getAbsolutePath()));
+				logFileList.add(FilenameUtils.getName(tmpFile.getAbsolutePath()));
 			}
 			Collections.sort(logFileList);
 
-			for (int i = logFileList.size() - 1, count = 0; count < 20 && i >=0 ; i--) {
+			for (int i = logFileList.size() - 1, count = 0; count < 20 && i >=0 ; i--, count++) {
 				currFileList.add(logFileList.get(i));
 			}
+			
+
+			// switch today file from last to first line
+			int lastIdx = currFileList.size()-1;
+			String todayLog = currFileList.remove(lastIdx);
+			currFileList.add(0,todayLog);
+
 		}
 		else
 		{
 			logger.info("logs direction not exist");
 		}
-
+		
+		
 		return currFileList;
 
+	}
+	
+	@RequestMapping(value ="/showLogFile", method = RequestMethod.GET)
+	@ResponseBody
+	public ArrayList<String> showLogFile(@RequestParam("fileName") String fileName)
+	{
+		fileName = FilenameUtils.concat("logs", fileName);
+		logger.info("Request Show Log Files / FileName : " + fileName);
+		ArrayList<String> logs = readingLogService.readLogFile(fileName);
+		return logs;
 	}
 
 	@RequestMapping(value = "/applyConfig", method = RequestMethod.POST)
@@ -107,9 +128,13 @@ public class MyHomeController {
 	public Map<String, Object> applyConfig(@RequestBody ConfigProperty configProperty, HttpServletRequest request) {
 		// logger.info("Config Property" + configProperty.getHighTemp());
 		logger.info("Called applyConfig");
-		PropertyReader propertyReader = new PropertyReader();
+		PropertyReader propertyReader = new PropertyReader(configPath);
 		boolean result = propertyReader.saveConfigProperty(configPath, configProperty);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if(result == true)
+		{
+			tempController.startTimer();
+		}
 		resultMap.put("result", result);
 
 		return resultMap;

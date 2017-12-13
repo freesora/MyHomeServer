@@ -102,9 +102,12 @@ public class BoilerRunner {
 		//logger.info("Called runBoiler Method -> Hoping Temp : " + temp);
 
 		//logger.info("Called settempWithoutMin Method -> Hoping Temp : " + temp);
-		logger.info("ON Heater.. Setting to High Temporature!");
+		
 		try {
 			PropertyReader prop = new PropertyReader(configPath);
+			
+			logger.info("ON Heater.. Setting to High Temporature! for " + prop.getRunningMin());
+			
 			HttpRequestWithBody httpRequest = Unirest.post(prop.getRequestURL());
 			for (int i = 1; i < 7; i++) {
 				if (i == 5)

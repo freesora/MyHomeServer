@@ -28,13 +28,14 @@
 				var list = response
 
 				$.each(list, function(i) {
-				$("#logFileTable").append("<tr>");
-				
+					$("#logFileTable").append('<tr class="tableRow">');
 
-					$("#logFileTable").append("<td>" + list[i] + "</td>");
-				
-				$("#logFileTable").append("</tr>");
+					//hrefStr = '<a href="showLogFile?filename=' + list[i] + '"> </a>';
+					$("#logFileTable").append('<td><a href="showLogFile?fileName=' + list[i] + '">' + list[i] + '</a></td>');
+
+					$("#logFileTable").append("</tr>");
 				});
+				
 			},
 			error : function(request, status, error) {
 				alert(response.message);
@@ -51,18 +52,18 @@
 
 		<br />
 
-		<div style="margin:auto;">		
-		<table data-role="table" id="table-column-toggle"
-			class="ui-responsive table-stroke">
-			<thead>
-				<tr style="margin: 0 auto;">
-					<th>Log Date</th>
-				</tr>
-			</thead>
-			<tbody id="logFileTable">
+		<div style="margin: auto;">
+			<table data-role="table" id="table-column-toggle"
+				class="ui-responsive table-stroke">
+				<thead>
+					<tr style="margin: 0 auto;">
+						<th>Log Date</th>
+					</tr>
+				</thead>
+				<tbody id="logFileTable">
 
-			</tbody>
-		</table>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </body>
